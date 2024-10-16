@@ -1,0 +1,27 @@
+# -*- coding: utf-8 -*-
+# @Author: jarvis.zhang
+# @Date:   2020-05-08 16:21:21
+# @Last Modified by:   jarvis.zhang
+# @Last Modified time: 2020-05-10 11:47:28
+import os
+import sys
+
+import torch
+import torch.utils.data as Data
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__))))
+print(sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__)))))
+from readdata import DataReader
+
+
+def getDataLoader(batch_size, num_of_questions, max_step):
+    handle = DataReader('dataset/assist2009/builder_train.csv',
+                        'dataset/assist2009/builder_test.csv', max_step,
+                        num_of_questions)
+    dtrain = torch.tensor(handle.getTrainData().astype(float).tolist(),
+                          dtype=torch.float32)
+    dtest = torch.tensor(handle.getTestData().astype(float).tolist(),
+                         dtype=torch.float32)
+    trainLoader = Data.DataLoader(dtrain, batch_size=batch_size, shuffle=True)
+    testLoader = Data.DataLoader(dtest, batch_size=batch_size, shuffle=False)
+    return trainLoader, testLoader
